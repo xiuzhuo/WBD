@@ -28,3 +28,19 @@ chrome.extension.onRequest.addListener(function(request, sender, sendRequest) {
       chrome.tabs.update(tabs[0].id, {url: request.redirect});
     });
 });
+
+getStoredValue("enable", true, function(enable){
+  alert(enable);
+  chrome.contextMenus.create({
+    type: "checkbox",
+    title: "Enable",
+    id: "enable",
+    contexts: ["all"],
+    checked: enable,
+    onclick: function(info){
+      setStoredValue("enable", info.checked);
+    }
+  }, function(){
+
+  });
+});
