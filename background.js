@@ -30,7 +30,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendRequest) {
 });
 
 getStoredValue("enable", true, function(enable){
-  alert(enable);
+  // alert(enable);
   chrome.contextMenus.create({
     type: "checkbox",
     title: "Enable",
