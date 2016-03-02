@@ -1,42 +1,6 @@
-$.extend( $.expr[":"], {
- containsExact: $.expr.createPseudo ?
-  $.expr.createPseudo(function(text) {
-   return function(elem) {
-    return $.trim(elem.innerHTML.toLowerCase()) === text.toLowerCase();
-   };
-  }) :
-  // support: jQuery <1.8
-  function(elem, i, match) {
-   return $.trim(elem.innerHTML.toLowerCase()) === match[3].toLowerCase();
-  },
-
- containsExactCase: $.expr.createPseudo ?
-  $.expr.createPseudo(function(text) {
-   return function(elem) {
-    return $.trim(elem.innerHTML) === text;
-   };
-  }) :
-  // support: jQuery <1.8
-  function(elem, i, match) {
-   return $.trim(elem.innerHTML) === match[3];
-  },
-
- containsRegex: $.expr.createPseudo ?
-  $.expr.createPseudo(function(text) {
-   var reg = /^\/((?:\\\/|[^\/]) )\/([mig]{0,3})$/.exec(text);
-   return function(elem) {
-    return RegExp(reg[1], reg[2]).test($.trim(elem.innerHTML));
-   };
-  }) :
-  // support: jQuery <1.8
-  function(elem, i, match) {
-   var reg = /^\/((?:\\\/|[^\/]) )\/([mig]{0,3})$/.exec(match[3]);
-   return RegExp(reg[1], reg[2]).test($.trim(elem.innerHTML));
-  }
-
-});
-
-
+function getElementByXpath(xpathExpression, contextNode) {
+  return document.evaluate(xpathExpression, contextNode, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
+}
 
 function filter(enable){
   if (window.location.href.indexOf('view=blacklist') > -1){
@@ -49,19 +13,24 @@ function filter(enable){
       // alert(blacklist);
     });
   } else if (enable) {
-      blacklist = chrome.storage.sync.get('blacklist', function(item){
+    chrome.storage.sync.get('blacklist', function(item){
         var blacklist = item.blacklist;
-        // alert(blacklist);
         if (blacklist) {
-          var blacklistQuery1 = [];
-          var blacklistQuery2 = [];
-          for (var i = 0; i < blacklist.length; i++){
-            var name = blacklist[i];
-            blacklistQuery1.push('tbody:has(td.by cite a:containsExact(' + name + '))');
-            blacklistQuery2.push('div:has(>table>tbody>tr>td>div>div>div.authi a:containsExact(' + name + '))');
+          var selectText = 'text()="' + blacklist.join('" or text()="')+ '"';
+          console.log(selectText);
+          var tableNode = document.querySelector('#threadlisttableid');
+          var result = getElementByXpath('./tbody//a[' + selectText + ']/../../../..', tableNode);
+          var r = result.iterateNext();
+          var toRemoveNodes = [];
+          while(r){
+            console.log(r);
+            toRemoveNodes.push(r);
+            r = result.iterateNext();
           }
-          var blacklistQuery = jQuery.merge(blacklistQuery1, blacklistQuery2);
-          $(blacklistQuery.join(',')).css('display','none');
+          console.log(toRemoveNodes.length);
+          for (var i = 0; i<toRemoveNodes.length; i++){
+            tableNode.removeChild(toRemoveNodes[i]);
+          }
         }
       });
   }

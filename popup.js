@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function(){
-  document.getElementById('go-to-blacklist').addEventListener('click', function(){
+  document.querySelector('#go-to-blacklist').addEventListener('click', function(){
     chrome.runtime.sendMessage(
         'go-to-blacklist',
         function (response) {
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
   });
 
-  document.getElementById('go-to-options').addEventListener('click', function() {
+  document.querySelector('#go-to-options').addEventListener('click', function() {
     chrome.runtime.sendMessage(
         'go-to-options',
         function (response) {
@@ -28,7 +28,5 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     }
   });
-
-
 
 });

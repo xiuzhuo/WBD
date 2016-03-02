@@ -31,7 +31,8 @@
   "content_scripts": [
     {
       "matches": [
-        "http://www.dolc.de/*fid=482*"
+        "http://www.dolc.de/*fid=482*",
+        "http://www.dolc.de/*view=blacklist"
       ],
       "js": [
         "jquery-2.1.4.js",
