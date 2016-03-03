@@ -6,11 +6,13 @@ function updateTabs(){
   });
 }
 
-chrome.tabs.onUpdated.addListener(function(){
-  updateTabs();
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+  if (changeInfo.status === "complete"){
+    updateTabs();
+  }
 });
 
-chrome.tabs.onActivated.addListener(function(){
+chrome.tabs.onActivated.addListener(function(activeInfo){
   updateTabs();
 });
 
@@ -36,19 +38,3 @@ chrome.runtime.onMessage.addListener(
         sendResponse("bar");
     }
 );
-
-//
-// getStoredValue("enable", true, function(enable){
-//   chrome.contextMenus.create({
-//     type: "checkbox",
-//     title: "Enable",
-//     id: "enable",
-//     contexts: ["all"],
-//     checked: enable,
-//     onclick: function(info){
-//       setStoredValue("enable", info.checked);
-//     }
-//   }, function(){
-//
-//   });
-// });

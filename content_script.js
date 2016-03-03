@@ -2,17 +2,24 @@ function getElementByXpath(xpathExpression, contextNode) {
   return document.evaluate(xpathExpression, contextNode, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
 }
 
-function filter(enable){
+function filter(){
   if (window.location.href.indexOf('view=blacklist') > -1){
     var blacklist = [];
-    $('div#friend_ul>ul>li>h4>span+a').each(function(){
-      blacklist.push($(this).text());
-    });
-    // alert(blacklist);
+    // $('div#friend_ul>ul>li>h4>span+a').each(function(){
+    //   blacklist.push($(this).text());
+    // });
+
+    var listNode = document.querySelector('#friend_ul');
+    var result = getElementByXpath('.//li/h4/a',listNode);
+    var r = result.iterateNext();
+    while(r){
+      blacklist.push(r.innerHTML);
+      r = result.iterateNext();
+    }
+    console.log(blacklist);
     chrome.storage.sync.set({'blacklist': blacklist}, function(){
-      // alert(blacklist);
     });
-  } else if (enable) {
+  } else {
     chrome.storage.sync.get('blacklist', function(item){
         var blacklist = item.blacklist;
         if (blacklist) {
@@ -20,22 +27,21 @@ function filter(enable){
           console.log(selectText);
           var tableNode = document.querySelector('#threadlisttableid');
           var result = getElementByXpath('./tbody//a[' + selectText + ']/../../../..', tableNode);
-          var r = result.iterateNext();
           var toRemoveNodes = [];
+          var r = result.iterateNext();
           while(r){
             console.log(r);
             toRemoveNodes.push(r);
             r = result.iterateNext();
           }
           console.log(toRemoveNodes.length);
+          //chrome.pageAction.browserAction({text: "10+"})
           for (var i = 0; i<toRemoveNodes.length; i++){
-            tableNode.removeChild(toRemoveNodes[i]);
+            tableNode.body.removeChild(toRemoveNodes[i]);
           }
         }
       });
   }
 }
 
-getStoredValue("enable", true, function(enable){
-  filter(enable);
-});
+filter();
