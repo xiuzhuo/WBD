@@ -1,14 +1,30 @@
 function updateTabs(){
-  chrome.tabs.query({active: true, url: "*://www.dolc.de/*"}, function(tabs){
+  chrome.tabs.query({active: true}, function(tabs){
       tabs.forEach(function(tab){
-        chrome.pageAction.show(tab.id);
+        chrome.browserAction.disable(tab.id);
+      });
+      chrome.tabs.query({active: true, url: "*://www.dolc.de/*"}, function(tabs){
+          tabs.forEach(function(tab){
+            chrome.browserAction.enable(tab.id);
+          });
       });
   });
+
 }
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
-  if (changeInfo.status === "complete"){
-    updateTabs();
+  console.log(tab.url);
+  switch (changeInfo.status){
+    case "loading":
+      if (tab.url.contains("www.dolc.de")){
+        chrome.browserAction.enable(tab.id);
+      }else{
+        chrome.browserAction.disable(tab.id);
+        chrome.browserAction.setBadgeText({text: ""});
+      }
+    break;
+    case "complete":
+    break;
   }
 });
 
@@ -33,6 +49,9 @@ chrome.runtime.onMessage.addListener(
             }
             break;
           default:
+            chrome.browserAction.enable(sender.tab.id);
+            chrome.browserAction.setBadgeText({text: request, tabId: sender.tab.id});
+            break;
 
         }
         sendResponse("bar");

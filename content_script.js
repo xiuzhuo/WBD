@@ -3,6 +3,7 @@ function getElementByXpath(xpathExpression, contextNode) {
 }
 
 function filter(){
+  console.log("hahaha");
   if (window.location.href.indexOf('view=blacklist') > -1){
     var blacklist = [];
     // $('div#friend_ul>ul>li>h4>span+a').each(function(){
@@ -35,9 +36,14 @@ function filter(){
             r = result.iterateNext();
           }
           console.log(toRemoveNodes.length);
-          //chrome.pageAction.browserAction({text: "10+"})
+          chrome.runtime.sendMessage(
+            toRemoveNodes.length.toString(),
+            function (response) {
+                console.log(response);
+            }
+          );
           for (var i = 0; i<toRemoveNodes.length; i++){
-            tableNode.body.removeChild(toRemoveNodes[i]);
+            tableNode.removeChild(toRemoveNodes[i]);
           }
         }
       });

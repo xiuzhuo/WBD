@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', function(){
             console.log(response);
         }
     );
-    //chrome.extension.sendRequest({redirect: "http://www.dolc.de/home.php?mod=space&do=friend&view=blacklist"});
-
   });
 
   document.querySelector('#go-to-options').addEventListener('click', function() {

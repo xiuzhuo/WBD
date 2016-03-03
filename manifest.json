@@ -8,7 +8,6 @@
   },
   "background": {
     "scripts": [
-      "jquery-2.1.4.js",
       "utils.js",
       "background.js"
     ]
@@ -19,8 +18,8 @@
     "storage",
     "http://www.dolc.de/"
   ],
-  "page_action": {
-    "default_icon": "icons/02.png",
+  "browser_action": {
+    "default_icon": "icons/00.png",
     "default_title": "Wir blocken das",
     "default_popup": "popup.html"
   },
@@ -41,6 +40,6 @@
   "options_ui": {
     "page": "options.html",//Required
     "chrome_style": true,//Recommended
-    "open_in_tab": false
+    "open_in_tab": true
   }
 }
