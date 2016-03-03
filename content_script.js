@@ -3,21 +3,15 @@ function getElementByXpath(xpathExpression, contextNode) {
 }
 
 function filter(){
-  console.log("hahaha");
   if (window.location.href.indexOf('view=blacklist') > -1){
     var blacklist = [];
-    // $('div#friend_ul>ul>li>h4>span+a').each(function(){
-    //   blacklist.push($(this).text());
-    // });
-
-    var listNode = document.querySelector('#friend_ul');
-    var result = getElementByXpath('.//li/h4/a',listNode);
+    var result = getElementByXpath('.//li/h4/a', document.querySelector('#friend_ul'));
     var r = result.iterateNext();
     while(r){
       blacklist.push(r.innerHTML);
       r = result.iterateNext();
     }
-    console.log(blacklist);
+    //console.log(blacklist);
     chrome.storage.sync.set({'blacklist': blacklist}, function(){
     });
   } else {
