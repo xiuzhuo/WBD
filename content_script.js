@@ -4,6 +4,7 @@ function getElementByXpath(xpathExpression, contextNode) {
 
 function filter(){
   if (window.location.href.indexOf('view=blacklist') > -1){
+    console.log("blacklist");
     var blacklist = [];
     var result = getElementByXpath('.//li/h4/a', document.querySelector('#friend_ul'));
     var r = result.iterateNext();
